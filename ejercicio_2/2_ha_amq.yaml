@@ -2,7 +2,6 @@ apiVersion: broker.amq.io/v1beta1
 kind: ActiveMQArtemis
 metadata:
   name: broker-amq
-  namespace: <Use Your Namespace>
 spec:
   console:
     expose: true
@@ -27,7 +26,7 @@ spec:
     - name: JAVA_ARGS_APPEND
       value: '-XX:MaxRAMPercentage=50'
   deploymentPlan:
-    size: 1
+    size: 2
     persistenceEnabled: true
     requireLogin: true
     podSecurity: {}
@@ -38,8 +37,32 @@ spec:
       requests:
         cpu: 100m
         memory: 128Mi
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        port: 8161
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    messageMigration: true
+    livenessProbe:
+      failureThreshold: 3
+      periodSeconds: 10
+      successThreshold: 1
+      tcpSocket:
+        port: 61616
+      timeoutSeconds: 5
     journalType: nio
     enableMetricsPlugin: true
+    startupProbe:
+      failureThreshold: 600
+      initialDelaySeconds: 10
+      periodSeconds: 1
+      successThreshold: 1
+      tcpSocket:
+        port: 61616
+      timeoutSeconds: 1
     storage:
       size: 5Gi
   addressSettings: {}

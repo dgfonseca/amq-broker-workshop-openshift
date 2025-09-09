@@ -4,7 +4,6 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import com.redhat.esb.model.Shipments;
-import com.redhat.esb.model.Tax;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -17,21 +16,10 @@ public class GreetingResource {
     @Channel("SHIPMENTS")
     Emitter<String> emitter;
 
-    @Channel("TAXES")
-    Emitter<String> emitter2;
-
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    public String sendShipments(Shipments shipment) {
+    public String hello(Shipments shipment) {
         emitter.send(shipment.toString());
         return "Shipment for user "+shipment.clientId+" sent";
-    }
-
-    @Path("/tax")
-    @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    public String sendTaxes(Tax tax) {
-        emitter2.send(tax.toString());
-        return "Tax for user "+tax.userName+" sent";
     }
 }
