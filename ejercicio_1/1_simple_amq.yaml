@@ -1,0 +1,69 @@
+apiVersion: broker.amq.io/v1beta1
+kind: ActiveMQArtemis
+metadata:
+  name: broker-amq
+  namespace: <Use Your Namespace>
+spec:
+  acceptors:
+    - name: artemis
+      port: 61616
+      protocols: 'amqp,openwire,core'
+      supportAdvisory: false
+      suppressInternalManagementObjects: false
+      expose: true
+  adminPassword: redhat
+  brokerProperties:
+    - metricsConfiguration.jvmGc=true
+    - metricsConfiguration.jvmThread=true
+    - addressConfigurations.SHIPMENTS.routingTypes=ANYCAST
+    - addressConfigurations.SHIPMENTS.queueConfigs.SHIPMENTS.address=SHIPMENTS
+    - addressConfigurations.SHIPMENTS.queueConfigs.SHIPMENTS.routingType=ANYCAST
+    - addressConfigurations.TAXES.routingTypes=MULTICAST
+    - addressConfigurations.TAXES.queueConfigs.TAXES.address=TAXES
+    - addressConfigurations.TAXES.queueConfigs.TAXES.routingType=MULTICAST
+  env:
+    - name: JAVA_ARGS_APPEND
+      value: '-XX:MaxRAMPercentage=50'
+  deploymentPlan:
+    size: 1
+    persistenceEnabled: true
+    requireLogin: true
+    podSecurity: {}
+    resources:
+      limits:
+        cpu: 250m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        port: 8161
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    messageMigration: false
+    livenessProbe:
+      failureThreshold: 3
+      periodSeconds: 10
+      successThreshold: 1
+      tcpSocket:
+        port: 61616
+      timeoutSeconds: 5
+    journalType: nio
+    enableMetricsPlugin: true
+    startupProbe:
+      failureThreshold: 600
+      initialDelaySeconds: 10
+      periodSeconds: 1
+      successThreshold: 1
+      tcpSocket:
+        port: 61616
+      timeoutSeconds: 1
+    storage:
+      size: 5Gi
+  addressSettings: {}
+  version: '7.13'
+  adminUser: admin
