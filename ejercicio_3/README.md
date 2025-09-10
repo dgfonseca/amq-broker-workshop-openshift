@@ -112,7 +112,7 @@ Esto se hace agregando las siguientes entradas en `spec.brokerProperties`:
 ```yaml
 spec:
   brokerProperties:
-    - securityRoles.#.client.send=true
+    - securityRoles.#.client.send=false
     - securityRoles.#.client.consume=true
     - securityRoles.#.client.createAddress=false
     - securityRoles.#.client.deleteAddress=false
@@ -132,7 +132,7 @@ spec:
 En el manifiesto del broker (`3_client_amq.yaml`), se debe referenciar el secreto `my-tls-secret` para que los **acceptors** usen TLS y el broker quede expuesto de manera segura fuera del cluster.
 
 ```bash
-oc create namespace amq-ej3-nombre
+oc new-project amq-ej3-nombre
 oc apply -f 3_client_amq.yaml
 ```
 

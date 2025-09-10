@@ -13,7 +13,7 @@ En este ejercicio se desplegará un broker AMQ simple en OpenShift usando un man
 Cree un nuevo namespace en OpenShift con el siguiente comando, reemplazando `amq-ej1-nombre` por el nombre que desee asignar:
 
 ```bash
-oc create namespace amq-ej1-nombre
+oc new-project amq-ej1-nombre
 ```
 
 > Nota: El namespace servirá como espacio aislado para desplegar los recursos del broker.

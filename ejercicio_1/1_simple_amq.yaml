@@ -2,7 +2,6 @@ apiVersion: broker.amq.io/v1beta1
 kind: ActiveMQArtemis
 metadata:
   name: broker-amq
-  namespace: <Use Your Namespace>
 spec:
   console:
     expose: true
